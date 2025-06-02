@@ -1,0 +1,11 @@
+[package]
+name = "sql-grimoire-id"
+version = "0.0.0"
+edition = "2024"
+
+[dependencies]
+serde = "1.0"
+uuid = "1.17"
+
+[dev-dependencies]
+serde_test = "1.0.177"
