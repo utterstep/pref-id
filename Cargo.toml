@@ -1,5 +1,5 @@
 [package]
-name = "sql-grimoire-id"
+name = "pref-id"
 version = "0.0.0"
 edition = "2024"
 
