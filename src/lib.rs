@@ -16,7 +16,7 @@ pub const SEPARATOR_LENGTH: usize = SEPARATOR.len_utf8();
 #[macro_export]
 macro_rules! define_id {
     ($name:ident, $prefix:expr) => {
-        define_id!($name, $prefix, sql_grimoire_id);
+        define_id!($name, $prefix, pref_id);
     };
     ($name:ident, $prefix:expr, $id_crate:ident) => {
         use $id_crate::reexports::*;
