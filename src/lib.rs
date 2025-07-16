@@ -36,9 +36,6 @@ macro_rules! define_id {
         define_id!($name, $prefix, pref_id);
     };
     ($name:ident, $prefix:expr, $id_crate:ident) => {
-        use ::std::str::FromStr;
-        use $id_crate::reexports::*;
-
         #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
         pub struct $name(uuid::Uuid);
 
@@ -50,13 +47,13 @@ macro_rules! define_id {
             }
         }
 
-        impl From<uuid::Uuid> for $name {
-            fn from(id: uuid::Uuid) -> Self {
+        impl From<$id_crate::reexports::uuid::Uuid> for $name {
+            fn from(id: $id_crate::reexports::uuid::Uuid) -> Self {
                 Self(id)
             }
         }
 
-        impl FromStr for $name {
+        impl ::std::str::FromStr for $name {
             type Err = $id_crate::IdParseError;
 
             fn from_str(s: &str) -> Result<Self, Self::Err> {
@@ -68,19 +65,19 @@ macro_rules! define_id {
                     return Err($id_crate::IdParseError::InvalidPrefix);
                 }
 
-                let uuid = uuid::Uuid::parse_str(&s[Self::PREFIX.len() + 1..])
+                let uuid = $id_crate::reexports::uuid::Uuid::parse_str(&s[Self::PREFIX.len() + 1..])
                     .map_err(|e| $id_crate::IdParseError::InvalidUuid(e))?;
 
                 Ok(Self(uuid.into()))
             }
         }
 
-        impl serde::Serialize for $name {
+        impl $id_crate::reexports::serde::Serialize for $name {
             fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
             where
-                S: serde::Serializer,
+                S: $id_crate::reexports::serde::Serializer,
             {
-                use std::fmt::Write;
+                use ::std::fmt::Write;
 
                 use $id_crate::Id;
 
@@ -96,11 +93,13 @@ macro_rules! define_id {
             }
         }
 
-        impl<'de> serde::Deserialize<'de> for $name {
+        impl<'de> $id_crate::reexports::serde::Deserialize<'de> for $name {
             fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
             where
-                D: serde::Deserializer<'de>,
+                D: $id_crate::reexports::serde::Deserializer<'de>,
             {
+                use ::std::str::FromStr;
+
                 let s = String::deserialize(deserializer)?;
 
                 Ok(Self::from_str(&s).map_err(|e| serde::de::Error::custom(e))?)
@@ -119,6 +118,8 @@ macro_rules! define_id {
 
 #[cfg(test)]
 mod tests {
+    use std::str::FromStr;
+
     use super::*;
 
     define_id!(TestId, "test", crate);
