@@ -60,6 +60,8 @@ macro_rules! define_id {
             type Err = $id_crate::IdParseError;
 
             fn from_str(s: &str) -> Result<Self, Self::Err> {
+                use $id_crate::Id;
+
                 if !s.starts_with(Self::PREFIX)
                     || s.as_bytes().get(Self::PREFIX.len()) != Some(&b'-')
                 {
