@@ -23,7 +23,7 @@ impl std::fmt::Display for IdParseError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             IdParseError::InvalidPrefix => write!(f, "failed to parse ID: invalid prefix"),
-            IdParseError::InvalidUuid(e) => write!(f, "failed to parse ID: invalid UUID: {}", e),
+            IdParseError::InvalidUuid(e) => write!(f, "failed to parse ID: invalid UUID: {e}"),
         }
     }
 }
@@ -102,7 +102,7 @@ macro_rules! define_id {
 
                 let s = String::deserialize(deserializer)?;
 
-                Ok(Self::from_str(&s).map_err(|e| serde::de::Error::custom(e))?)
+                Self::from_str(&s).map_err(|e| serde::de::Error::custom(e))
             }
         }
 
